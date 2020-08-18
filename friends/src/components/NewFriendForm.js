@@ -1,25 +1,77 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react";
+import {axiosWithAuth} from '../utils/axiosAuth'
 
-function NewFriendForm() {
-  return (
-    <Fragment>
-      <form>
+
+class NewFriendForm extends Component {
+  state={
+    friend:{
+      name:'',
+      age:'',
+      email:''
+    }
+  }
+
+  onChange = (e) => {
+    this.setState({
+      friend:{
+        ...this.state.friend,
+        [e.target.name]:e.target.value
+      }
+    })
+  }
+
+
+ onSubmit = (e) => {
+   e.preventDefault()
+   axiosWithAuth()
+   .post('/friends',this.state.friend)
+   .catch(err=>{
+     console.log(err)
+   })
+   this.setState({
+     friend:{
+       name:'',
+       age:'',
+       email:''
+     }
+   })  
+ }
+
+
+
+  render(){
+    return (
+    <React.Fragment>
+      <form onSubmit={this.onSubmit}>
         <label>
           name
-          <input />
+          <input
+          type='text'
+          name='name'
+          value={this.state.friend.name}
+          onChange={this.onChange}
+           />
         </label>
         <label>
           age
-          <input />
+          <input
+          type='text'
+          name='age'
+          value={this.state.friend.age}
+          onChange={this.onChange}
+           />
         </label>
         <label>
           email
-          <input />
+          <input
+          type='email'
+          name='email'
+          value={this.state.friend.email}
+          onChange={this.onChange} />
         </label>
         <button>Add Friend</button>
       </form>
-    </Fragment>
-  );
+    </React.Fragment>
+  );}
 }
 export default NewFriendForm;
