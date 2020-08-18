@@ -1,16 +1,39 @@
-import React from 'react'
+import React, { Component } from "react";
+import {axiosWithAuth} from '../utils/axiosAuth'
 
-export default function Friends(props) {
-    // const friends = {props.friends.map(friend=>(
-    //     <h1>friend.name</h1>
-    //     <p>friend.age</p>
-    //     <p>friend.email</p>
-    // ))}
-    return (
-        <div>
-            dog
-            dog 
-            dog            
-        </div>
-    )
+class Friends extends Component {
+  state = {
+    friends: []
+  }
+  componentDidMount(){
+    this.getFriends()
+  }
+  
+  getFriends = () => {
+    axiosWithAuth()
+    .get('/friends')
+    .then(res=>{         
+      this.setState({
+        friends:res.data 
+      })
+      console.log(res)      
+    })
+    .catch(err=>{
+      console.log('this is da error',err)
+    })
+
+  };
+
+  render() {
+    const friends = this.state.friends.map((friend) => (
+      <div key={friend.id}>
+        <h1>{friend.name}</h1>
+        <p>{friend.age}</p>
+        <p>{friend.email}</p>
+      </div>
+    ));
+    return <div>{friends}</div>;
+  }
 }
+
+export default Friends;
